@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Innovius · Sourcing Program Sign-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- ══════════════════════════════════════════════════════════════
+     CONFIG — Paste your Google Apps Script Web App URL below
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+  const SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0n2S6m5yZRAx-Uy3OpWNJAqMoGmGTnLpYER2Vujf7kzaT3gQdWeoUV48simpMh8IV_w/exec"; // ← Paste your deployed Apps Script URL here
+</script>
+
+<style>
+  :root {
+    --green: #1A3320;
+    --green-deep: #0F1F13;
+    --lime: #A3F09A;
+    --lime-soft: #D6F5D3;
+    --lime-wash: #F0FAED;
+    --off: #F7F7F5;
+    --white: #FFFFFF;
+    --ink: #1A1A1A;
+    --mute: #6B6B6B;
+    --rule: #E5E5E0;
+    --coral: #FF6B47;
+    --coral-soft: #FFEBE4;
+    --card-claimed-bg: #EEEEEB;
+    --card-claimed-ink: #9A9A95;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--off);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  /* ─── Sticky Nav ─── */
+  .navbar {
+    position: sticky;
+    top: 0;
+    background: var(--green);
+    color: var(--white);
+    padding: 14px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50;
+    border-bottom: 2px solid var(--lime);
+  }
+  .nav-brand {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+  }
+  .nav-brand em {
+    color: var(--lime);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.78);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+  }
+  .nav-links a:hover { color: var(--lime); border-color: rgba(163,240,154,0.3); }
+  .sync-indicator {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sync-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--lime);
+  }
+  .sync-dot.syncing { background: #FFC857; animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--coral); }
+  .sync-dot.local { background: #999; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  /* ─── Hero ─── */
+  .hero {
+    background: var(--green);
+    color: var(--white);
+    padding: 48px 48px 48px;
+    border-bottom: 8px solid var(--lime);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -40%; right: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(163,240,154,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--lime);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 1000px;
+    margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--lime);
+  }
+  .hero-lede {
+    max-width: 780px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .hero-meta > div { min-width: 160px; }
+  .hero-meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--lime);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .hero-meta-val {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--white);
+  }
+
+  /* ─── How it works ─── */
+  .how {
+    background: var(--white);
+    padding: 28px 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .how-wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  .how-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .how-num {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    color: var(--lime);
+    background: var(--green);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+  .how-txt { font-size: 13px; color: var(--ink); line-height: 1.5; }
+  .how-txt strong {
+    display: block;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    color: var(--green);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  /* ─── Section Headers ─── */
+  .section-header {
+    padding: 56px 48px 32px;
+    background: var(--off);
+  }
+  .section-header-inner {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .section-title {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 900;
+    font-size: 44px;
+    color: var(--green);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--coral);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .section-desc {
+    max-width: 560px;
+    font-size: 14px;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+  .section-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--mute);
+    white-space: nowrap;
+  }
+  .section-counter strong {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .legend-bar {
+    padding: 0 48px 20px;
+    background: var(--off);
+  }
+  .legend-bar-inner {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  .tier-legend { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tier-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  .tier-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .tier-dot.skill { background: var(--lime); }
+  .tier-dot.tool { background: #3EA873; }
+  .tier-dot.product { background: var(--green); }
+  .tier-dot.program { background: var(--coral); }
+
+  /* ─── BUILD Matrix ─── */
+  .matrix {
+    padding: 8px 48px 64px;
+    overflow-x: auto;
+    background: var(--off);
+  }
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 160px repeat(6, minmax(280px, 1fr));
+    gap: 14px;
+    min-width: 1800px;
+  }
+  .col-head {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 16px 14px;
+    background: var(--white);
+    border-bottom: 3px solid var(--green);
+    line-height: 1.3;
+  }
+  .col-head-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--lime);
+    background: var(--green);
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+  .row-head {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--white);
+    background: var(--green);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-left: 4px solid var(--lime);
+  }
+  .row-head-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--lime);
+    letter-spacing: 0.18em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .row-head-window {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100px;
+  }
+  .cell-empty {
+    background: transparent;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+    opacity: 0.4;
+  }
+
+  /* ─── Card (shared shape, BUILD + RUN) ─── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 14px 12px;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+  }
+  .card:hover:not(.card-claimed) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -12px rgba(26,51,32,0.3);
+    border-color: var(--green);
+  }
+  .card[data-tier="skill"]::before,
+  .card[data-tier="tool"]::before,
+  .card[data-tier="product"]::before,
+  .card[data-tier="program"]::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+  }
+  .card[data-tier="skill"]::before   { background: var(--lime); }
+  .card[data-tier="tool"]::before    { background: #3EA873; }
+  .card[data-tier="product"]::before { background: var(--green); }
+  .card[data-tier="program"]::before { background: var(--coral); }
+
+  .card-title {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-top: 4px;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: var(--mute);
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .card-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.05em;
+  }
+  .card-status.claimed { color: var(--coral); }
+  .card-status.open { color: var(--green); font-weight: 500; }
+  .card-arrow {
+    font-size: 11px;
+    color: var(--mute);
+    transition: transform 0.18s ease;
+  }
+  .card:hover:not(.card-claimed) .card-arrow { transform: translateX(3px); color: var(--green); }
+
+  .card-claimed {
+    background: var(--card-claimed-bg);
+    border-style: dashed;
+    cursor: pointer;
+    opacity: 0.62;
+  }
+  .card-claimed .card-title,
+  .card-claimed .card-desc,
+  .card-claimed .card-status { color: var(--card-claimed-ink); }
+  .card-claimed::before { opacity: 0.35; }
+  .claimed-by {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--coral);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .family-badge {
+    position: absolute;
+    top: 8px; right: 10px;
+    background: var(--lime);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ─── RUN Grid ─── */
+  .run-section {
+    background: var(--off);
+    padding-bottom: 80px;
+  }
+  .run-grid {
+    padding: 8px 48px 0;
+    max-width: 1800px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .run-grid .card {
+    padding: 18px 18px 14px;
+  }
+  .run-grid .card-title {
+    font-size: 16px;
+    margin-top: 6px;
+  }
+
+  .divider {
+    padding: 48px 48px 32px;
+    background: var(--off);
+    text-align: center;
+  }
+  .divider-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 32px 32px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .divider-txt {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 600;
+    color: var(--green);
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .divider-txt em {
+    color: var(--coral);
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  /* ─── Modal ─── */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 31, 19, 0.72);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 40px 20px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--white);
+    border-radius: 12px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal-head {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--white);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--mute);
+    transition: all 0.15s ease;
+  }
+  .modal-close:hover { background: var(--green); color: var(--white); border-color: var(--green); }
+
+  .modal-tier {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+  .modal-tier.program { color: var(--coral); }
+  .modal-title {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 8px;
+    padding-right: 40px;
+  }
+  .modal-col {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .modal-body { padding: 24px 32px; }
+  .modal-body h4 {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 18px 0 8px;
+  }
+  .modal-body h4.program-h { color: var(--coral); }
+  .modal-body h4:first-child { margin-top: 0; }
+  .modal-body p {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .modal-body p.dimmed {
+    color: var(--mute);
+    font-style: italic;
+    font-size: 13px;
+  }
+  .modal-body ul { list-style: none; padding: 0; margin: 6px 0 8px; }
+  .modal-body li {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    padding-left: 16px;
+    position: relative;
+    margin-bottom: 5px;
+  }
+  .modal-body li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 9px;
+    width: 6px; height: 2px;
+    background: var(--lime);
+  }
+  .modal-body li.program-li::before { background: var(--coral); }
+
+  .kv-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .kv-row:first-of-type { border-top: none; padding-top: 0; }
+  .kv-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--coral);
+    padding-top: 2px;
+  }
+  .kv-val {
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .kv-val.blank {
+    color: var(--mute);
+    font-style: italic;
+  }
+
+  .note-box {
+    background: var(--lime-soft);
+    border-left: 4px solid var(--green);
+    padding: 12px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    line-height: 1.55;
+    margin-top: 14px;
+    color: var(--green-deep);
+  }
+
+  .modal-foot {
+    padding: 20px 32px 28px;
+    background: var(--off);
+    border-top: 1px solid var(--rule);
+    border-radius: 0 0 12px 12px;
+  }
+  .signup-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+  .signup-row { display: flex; gap: 10px; align-items: stretch; }
+  .signup-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .signup-input:focus { border-color: var(--green); }
+  .signup-btn {
+    padding: 12px 20px;
+    background: var(--green);
+    color: var(--lime);
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s ease;
+  }
+  .signup-btn:hover { background: var(--green-deep); }
+  .signup-btn:disabled { background: var(--card-claimed-ink); cursor: not-allowed; color: var(--white); }
+
+  .claimed-state {
+    padding: 14px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .claimed-info { font-size: 14px; color: var(--ink); }
+  .claimed-info strong {
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .release-btn {
+    padding: 8px 14px;
+    background: var(--white);
+    color: var(--coral);
+    border: 1px solid var(--coral);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+  }
+  .release-btn:hover { background: var(--coral); color: var(--white); }
+
+  .contrib-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+  .contrib-section h4 { margin-top: 0; }
+  .contrib-lede {
+    font-size: 12px;
+    color: var(--mute);
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+  .contrib-list { display: grid; gap: 8px; }
+  .contrib-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    font-size: 13px;
+    gap: 10px;
+  }
+  .contrib-row.contrib-claimed {
+    background: var(--card-claimed-bg);
+    opacity: 0.75;
+  }
+  .contrib-name { flex: 1; color: var(--ink); font-weight: 500; }
+  .contrib-by {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--coral);
+    letter-spacing: 0.04em;
+  }
+  .contrib-btn {
+    padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--green);
+    color: var(--lime);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .contrib-btn:hover { background: var(--green-deep); }
+  .contrib-btn.contrib-release {
+    background: var(--white);
+    color: var(--coral);
+    border: 1px solid var(--coral);
+  }
+  .contrib-btn.contrib-release:hover { background: var(--coral); color: var(--white); }
+
+  /* ─── Footer ─── */
+  footer {
+    background: var(--green);
+    color: rgba(255,255,255,0.7);
+    padding: 32px 48px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+    border-top: 6px solid var(--lime);
+  }
+  footer strong { color: var(--lime); font-weight: 500; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--green);
+    color: var(--lime);
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.25s;
+    z-index: 200;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { background: var(--coral); color: white; }
+
+  @media (max-width: 1200px) {
+    .run-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 980px) {
+    .how-wrap { grid-template-columns: repeat(2, 1fr); }
+    .hero, .how, .section-header, .legend-bar, .matrix, .run-grid, footer, .navbar {
+      padding-left: 24px; padding-right: 24px;
+    }
+    .run-grid { grid-template-columns: 1fr; }
+    .nav-links a { padding: 4px 8px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-brand">Innovius <em>· Sourcing Program</em></div>
+  <div class="nav-links">
+    <a href="#build">BUILD</a>
+    <a href="#run">RUN</a>
+    <div class="sync-indicator">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span id="sync-status">Loading…</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Innovius · Sourcing Acceleration · Q2 2026</div>
+  <h1>Pick what you'll <em>own.</em> Build it. Run it.</h1>
+  <p class="hero-lede">
+    Every team member claims <strong>one BUILD item and one RUN program</strong>. BUILD is the enablement layer — skills, tools, products. RUN is the campaign layer — who we reach out to and how we measure the result. Click any card to read the spec and sign up. Claims sync live across the team.
+  </p>
+  <div class="hero-meta">
+    <div>
+      <div class="hero-meta-label">Session</div>
+      <div class="hero-meta-val">Sourcing Workshop · Apr 20</div>
+    </div>
+    <div>
+      <div class="hero-meta-label">Cadence</div>
+      <div class="hero-meta-val">Mon standups · 2-wk sprints</div>
+    </div>
+    <div>
+      <div class="hero-meta-label">Build Claimed</div>
+      <div class="hero-meta-val" id="build-count">0 / 0</div>
+    </div>
+    <div>
+      <div class="hero-meta-label">Run Claimed</div>
+      <div class="hero-meta-val" id="run-count">0 / 0</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how">
+  <div class="how-wrap">
+    <div class="how-item">
+      <div class="how-num">1</div>
+      <div class="how-txt"><strong>Browse</strong>Scan the BUILD matrix and RUN programs.</div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">2</div>
+      <div class="how-txt"><strong>Click</strong>Open a card to read what it is and what done looks like.</div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">3</div>
+      <div class="how-txt"><strong>Claim</strong>Enter your name. Everyone sees the update.</div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">4</div>
+      <div class="how-txt"><strong>Ship</strong>Report progress every Monday. Full readout at 2-week checkpoint.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILD SECTION -->
+<section class="section-header" id="build">
+  <div class="section-header-inner">
+    <div>
+      <div class="section-eyebrow" style="color: var(--green);">Section 01 · BUILD</div>
+      <div class="section-title">Skills · Tools · Products</div>
+      <p class="section-desc" style="margin-top: 12px;">
+        The enablement layer. Six functional columns × three delivery tiers. Skills ship in 30 days, Tools in 60, Products in 90+. Choose one to own.
+      </p>
+    </div>
+    <div class="section-counter">
+      <span id="build-counter"><strong>0</strong> / <strong>0</strong></span> claimed
+    </div>
+  </div>
+</section>
+
+<div class="legend-bar">
+  <div class="legend-bar-inner">
+    <div class="tier-legend">
+      <span class="tier-pill"><span class="tier-dot skill"></span>Skill · 30 days</span>
+      <span class="tier-pill"><span class="tier-dot tool"></span>Tool · 60 days</span>
+      <span class="tier-pill"><span class="tier-dot product"></span>Product · 90+ days</span>
+    </div>
+  </div>
+</div>
+
+<section class="matrix">
+  <div class="matrix-grid" id="grid"></div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="divider-inner">
+    <div class="divider-txt">From making things <em>→</em> to running plays</div>
+  </div>
+</div>
+
+<!-- RUN SECTION -->
+<section class="run-section" id="run">
+  <div class="section-header" style="padding-top: 0;">
+    <div class="section-header-inner">
+      <div>
+        <div class="section-eyebrow">Section 02 · RUN</div>
+        <div class="section-title">Programs</div>
+        <p class="section-desc" style="margin-top: 12px;">
+          The campaign layer. Each program defines a target cohort, hypothesis, and success metric. Owners are accountable for pipeline generated, not code shipped.
+        </p>
+      </div>
+      <div class="section-counter">
+        <span id="run-counter"><strong>0</strong> / <strong>0</strong></span> claimed
+      </div>
+    </div>
+  </div>
+
+  <div class="legend-bar">
+    <div class="legend-bar-inner">
+      <div class="tier-legend">
+        <span class="tier-pill"><span class="tier-dot program"></span>Program · Campaign owner defines metric</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="run-grid" id="run-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Innovius Capital · Internal · Live-synced to Google Sheets · Questions? <strong>Akash</strong>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      <div class="modal-tier" id="m-tier"></div>
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-col" id="m-col"></div>
+    </div>
+    <div class="modal-body" id="m-body"></div>
+    <div class="modal-foot" id="m-foot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═════════════════════════════════════════════════════════════════
+   DATA
+   ═════════════════════════════════════════════════════════════════ */
+
+const COLS = [
+  { key: "discovery",   short: "01", title: "Discovery / Identifying Targets" },
+  { key: "outreach",    short: "02", title: "Outreach Engine" },
+  { key: "followup",    short: "03", title: "Follow-Up & Re-Engagement" },
+  { key: "pipeline",    short: "04", title: "Pipeline Visibility & State" },
+  { key: "investor",    short: "05", title: "Investor Relationships & Deal Sharing" },
+  { key: "infra",       short: "06", title: "Infrastructure & Platform" },
+];
+
+const TIERS = [
+  { key: "skill",   label: "Skill",   window: "30 days", desc: "Claude-native, repeatable, one-person effort" },
+  { key: "tool",    label: "Tool",    window: "60 days", desc: "Python/agent/dashboard, some complexity, needs hosting" },
+  { key: "product", label: "Product", window: "90+ days", desc: "Hosted, team-usable, iterated to excellence" },
+];
+
+const BUILD_CARDS = [
+  /* DISCOVERY */
+  {
+    id: "scanner-family", col: "discovery", tier: "skill",
+    title: "Source Scanner Skill Family", isFamily: true,
+    lede: "A family of 8 Claude skills, one per external source. A single Lead shepherds the set — other teammates can optionally pick up individual scanners as stretch work.",
+    why: "Harmonic covers a fraction of the real universe. Net-new companies live in newsletters, conferences, market maps, LinkedIn, PE portcos, Tegus, and VC inbound. Today finding them is manual Googling. One skill per source turns each into a repeatable, one-prompt pipeline.",
+    what: [
+      "Lead owns: skill scaffolding, shared output schema, brand consistency, aggregator integration",
+      "Each sub-scanner: takes a source as input, returns structured company rows ready for Affinity",
+      "Contributors build individual scanners — each is a self-contained Claude skill"
+    ],
+    done: "Lead: all 8 scanners ship, share a schema, pipe to the Discovery Aggregator Tool. Contributors: their scanner runs end-to-end and produces a clean company list.",
+    note: "Family model: the Lead claim counts as their matrix item. Each sub-scanner is a separate contributor slot and does NOT consume the contributor's main slot — it's stretch work.",
+    subItems: [
+      { id: "fam-newsletter", name: "Newsletter & deal announcement scanner" },
+      { id: "fam-conference", name: "Conference list scanner" },
+      { id: "fam-marketmap",  name: "Market map screen-scraper" },
+      { id: "fam-li-similar", name: "LinkedIn 'similar companies' crawler" },
+      { id: "fam-li-posts",   name: "LinkedIn post mention scraper" },
+      { id: "fam-pe-portco",  name: "PE portco scraper" },
+      { id: "fam-tegus",      name: "Tegus GTM-signal extractor" },
+      { id: "fam-vc-inbound", name: "VC inbound email analyzer" },
+    ]
+  },
+  {
+    id: "thesis-builder", col: "discovery", tier: "skill",
+    title: "Thesis Builder Skill",
+    lede: "Input a vertical, get structured sub-segments and sub-theses back.",
+    why: "Marci's pain point: after a first pass through a vertical, sub-segmentation is manual and time-consuming. A skill that produces 'here are the 6 sub-segments worth exploring in manufacturing' unblocks deeper thematic work without a deep-dive day.",
+    what: [
+      "Input: vertical name + optional constraints (size, geography, stage)",
+      "Output: 4–8 sub-segments, each with thesis, example companies, and search keywords",
+      "Keywords feed directly into the scanner family"
+    ],
+    done: "Skill used by Marci and Koby without help. At least 3 verticals tested end-to-end."
+  },
+  {
+    id: "rubric", col: "discovery", tier: "skill",
+    title: "Anti-Consensus Qualification Rubric",
+    lede: "The '90th percentile and above, regardless of backer' scoring logic — codified.",
+    why: "Justin's in-session reframe: we pre-disqualify too aggressively at the top. This rubric removes the top-layer filter and replaces gut-feel qualification with a deterministic rule anyone can apply in 30 seconds.",
+    what: [
+      "Written decision tree: when to reach out, when to skip, when to escalate",
+      "Plugs into Swan as a scoring layer and into the scanner aggregator as a router",
+      "Includes the 'test 10 consensus-backed companies' experiment as a pressure test"
+    ],
+    done: "Rubric documented, reviewed by Justin, wired into Swan. Experiment results reported at 2-week checkpoint."
+  },
+  {
+    id: "discovery-aggregator", col: "discovery", tier: "tool",
+    title: "Multi-Source Discovery Aggregator",
+    lede: "Consumes output from all scanner skills. One dashboard, one triage flow.",
+    why: "Eight scanners producing raw company lists is worse than none if they land in eight different places. The aggregator is the single surface that consolidates, scores, deduplicates, assigns, and routes to an owner.",
+    what: [
+      "Pulls from every scanner skill on a scheduled cadence",
+      "Deduplicates against Affinity; keeps only net-new",
+      "Auto-assigns based on vertical → team member mapping",
+      "Owner sees a yes/no triage queue: approve → fires into outreach; reject → feeds low-conviction learning agent"
+    ],
+    done: "Runs daily. Every team member gets a triage queue each morning. Net-new company add rate up 5x."
+  },
+  {
+    id: "low-conviction", col: "discovery", tier: "tool",
+    title: "Low-Conviction Learning Agent",
+    lede: "Captures every pass decision; trains the filter over time.",
+    why: "Right now, when someone passes on a company, the knowledge evaporates. The agent watches every rejection, asks 'why,' builds a model, and eventually auto-filters so humans only see companies that cleared the machine.",
+    what: [
+      "Hooks into the aggregator reject flow",
+      "Prompts for a one-line 'why' on rejection",
+      "Trains over time; surfaces disagreements between humans and model"
+    ],
+    done: "Model demonstrably reduces reject queue volume by 30%+ over 8 weeks without false-drops."
+  },
+  {
+    id: "swan", col: "discovery", tier: "product",
+    title: "Swan — Signal-Based Sourcing Engine",
+    lede: "Innovius's anti-consensus, always-on, multi-signal sourcing radar.",
+    why: "This is the firm's sourcing differentiation — the layer that makes us different from every other VC buying off-the-shelf Harmonic and Clay. Unconsensus + ICP-tuned + Athena-scored + multi-signal. Signals include funding announcements, GTM hires, international expansion, integration launches.",
+    what: [
+      "Clay workflow runs every morning",
+      "Monitors 4+ signal types per company",
+      "Filters for anti-consensus + ICP fit",
+      "Feeds Affinity with auto-enriched records and a triggered outreach queue"
+    ],
+    done: "Production-grade Swan replaces current 'ad hoc Clay flows.' Documented, team-usable, measurably net-new pipeline per week.",
+    note: "Akash has prototyped Swan. This program is about productizing and handing it off — not rebuilding from scratch."
+  },
+  {
+    id: "agent-swarm", col: "discovery", tier: "product",
+    title: "Agent Swarm Persona Evaluator",
+    lede: "24/7 associate / principal / partner agent personas that gate every company.",
+    why: "Justin's proposal: replicate the human review chain with agents. Each persona uses a different underlying model to avoid bias; each has a checklist the corresponding human would actually use. Output is a company brief with a recommendation — associate reviewed → principal challenged → partner gated.",
+    what: [
+      "Three agent personas with distinct prompts + models",
+      "Runs autonomously overnight on the top N companies in Swan queue",
+      "Produces a brief with a confidence score and an escalation recommendation"
+    ],
+    done: "Top 50 new companies per week arrive as pre-reviewed briefs in each team member's inbox."
+  },
+  /* OUTREACH */
+  {
+    id: "template-rewrite", col: "outreach", tier: "skill",
+    title: "Template + Sequence Rewrite",
+    lede: "New outreach template from scratch plus a redesigned step-1-through-N sequence.",
+    why: "Marci: the current template 'clearly wasn't written by a human.' The template is the single most-used asset in the firm's sourcing and it's been degrading response rates. A rewrite is high-leverage, one-person work.",
+    what: [
+      "Tear down current template; study high-converting VC outreach from other firms",
+      "Rewrite 1st-touch template + complete 1-through-N sequence",
+      "A/B test against current baseline on a 200-company cohort"
+    ],
+    done: "New template wins against control on response rate. Full sequence documented and deployed to Athena."
+  },
+  {
+    id: "occasion-templates", col: "outreach", tier: "skill",
+    title: "Occasion Template Library",
+    lede: "Plug-and-play templates for dinners, city visits, conferences, investor referrals.",
+    why: "Occasion-based outreach currently requires custom editing per email — which is why Marci spends 5–15 minutes per send. A library turns 'city visit Tuesday' into a 10-minute send, not an hour.",
+    what: [
+      "Dinner invite (pre + day-of)",
+      "City visit",
+      "Conference co-located meeting",
+      "Investor referral intro",
+      "Each includes subject line, body, follow-up, calendar suggestion"
+    ],
+    done: "Library lives in Athena. Anyone on the team can fire an occasion campaign in under 15 minutes."
+  },
+  {
+    id: "email-custom-engine", col: "outreach", tier: "tool",
+    title: "Email Customization Engine",
+    lede: "Per-company personalization + cap-table VC name-drop injection.",
+    why: "Two parts of the same problem: every email should reference something specific to the company (not a fake blog post), and when Innovius has a relationship with a VC on the cap table, that should appear in the email automatically.",
+    what: [
+      "Pulls structured company data (product, recent news, team size, funding)",
+      "Checks Affinity for VC cap-table overlap; injects name-drop if warm",
+      "Hands clean email to the Quality Pipeline"
+    ],
+    done: "Every auto-generated email is accurate (no hallucinated blog posts) and uses Innovius's relationship graph when relevant."
+  },
+  {
+    id: "quality-pipeline", col: "outreach", tier: "tool",
+    title: "Outbound Quality Pipeline",
+    lede: "Multi-model refinement → accuracy check → send.",
+    why: "Justin's multi-model framework: Sonar for research, a parser for extraction, an anti-AI-voice editor, an accuracy reviewer that validates every factual claim. Cost is ~10¢ per email. Worth it for response-rate gains and the elimination of hallucinations burning trust right now.",
+    what: [
+      "Sonar does research on the target company",
+      "Parser extracts verifiable facts",
+      "Anti-AI-voice editor strips em-dashes, 'great perspective,' etc.",
+      "Accuracy reviewer cross-checks every factual claim before send"
+    ],
+    done: "Zero hallucinations in a random 50-email audit. Response rate materially above current baseline."
+  },
+  {
+    id: "push-system", col: "outreach", tier: "product",
+    title: "Push-Based Outreach System",
+    lede: "Replaces 'go find companies' with 'here are 20, click to send.'",
+    why: "Every friction point in outbound comes down to pull: someone has to remember, check, open a tool, filter, decide, write, send. Push inverts it: the system does the first 6 steps and presents the 7th as a one-click approval. Single biggest UX lever in the matrix.",
+    what: [
+      "Morning dashboard: 'Today's queue' with companies, scores, pre-drafted email",
+      "One-click send, one-click skip, one-click edit-then-send",
+      "All decisions feed the Continuous Learning Loop"
+    ],
+    done: "Sourcing becomes a 30-minute morning ritual instead of a multi-hour ordeal. Time-per-email drops from 15 min to <2 min."
+  },
+  {
+    id: "learning-loop", col: "outreach", tier: "product",
+    title: "Continuous Learning Loop",
+    lede: "Every edit, response, and outcome feeds back into the models.",
+    why: "Today every human edit to an email is lost. Every response (positive or negative) is lost. The learning loop captures all of it and uses it to improve template selection, personalization, scoring, and escalation. Compounds quietly over months.",
+    what: [
+      "Hooks into email send, reply, and edit events",
+      "Captures deltas, sentiment, and outcome",
+      "Feeds the template engine, the scoring model, and the low-conviction filter"
+    ],
+    done: "Observable improvement in response rates over a 12-week horizon; explicit learning curve visible in a simple report."
+  },
+  /* FOLLOW-UP */
+  {
+    id: "escalation-playbook", col: "followup", tier: "skill",
+    title: "Escalation Path Playbook",
+    lede: "Deterministic step-by-step: who sends step 2, what channel is step 3.",
+    why: "Escalation today is ad hoc — which means when someone doesn't respond, nothing consistent happens. A playbook says: step 1 associate email → step 2 partner email → step 3 LinkedIn from partner → step 4 event invite. No ambiguity.",
+    what: [
+      "Decision tree documented for all company tiers",
+      "Channel mapping by tier",
+      "Integrates with the Events-in-Sequence automation"
+    ],
+    done: "Doc lives in the firm library. Referenced by every outreach sequence design."
+  },
+  {
+    id: "event-calendar", col: "followup", tier: "skill",
+    title: "Annual Innovius Event Calendar",
+    lede: "Master calendar of dinners, summits, city visits with a shareable link.",
+    why: "Prerequisite for the Events-in-Sequence automation. Without a single source of truth for 'what events are happening and where,' step-4-auto-event-invite can't work.",
+    what: [
+      "Calendar with all firm events (confirmed + tentative)",
+      "Per-event page: city, date, audience, RSVP",
+      "One shareable public URL"
+    ],
+    done: "Calendar is live, maintained, and linked from every outreach sequence."
+  },
+  {
+    id: "content-followup", col: "followup", tier: "skill",
+    title: "Light-Touch Content Follow-Up Generator",
+    lede: "Industry trends, GTM observations, Opus-generated briefs. No hard ask.",
+    why: "Justin's framing: mass outreach with content is how we build brand without asking for anything. Think 'top 3 CEO failure modes' as a one-pager, sent to 200 CEOs, no CTA. Builds trust over time.",
+    what: [
+      "3–5 content templates per quarter (observations, briefs, frameworks)",
+      "Generator pulls from portfolio patterns + Akash's POV",
+      "Sends into re-engagement sequences as low-pressure touches"
+    ],
+    done: "First 3 content pieces sent to 200+ CEOs. Engagement measured (open, reply, forward)."
+  },
+  {
+    id: "video-breakin", col: "followup", tier: "skill",
+    title: "Video/Voice Break-In Content",
+    lede: "Synthesia-style short videos for high-priority targets.",
+    why: "For top-20 accounts, a 30-second video from Akash or Xiaolei can be the difference between an ignore and a reply. Scaled via AI video generation for first-pass, human for final edit.",
+    what: [
+      "Template script for each account tier",
+      "Tooling: Synthesia or equivalent",
+      "Distribution: embedded in step 3 or 4 of high-tier sequences"
+    ],
+    done: "10 high-priority accounts receive video outreach. Response rate benchmarked."
+  },
+  {
+    id: "reminder-dashboard", col: "followup", tier: "tool",
+    title: "Reminder-to-Action Dashboard",
+    lede: "Surfaces dormant accounts with pre-drafted messages, one-click send.",
+    why: "Today everyone has 100–150 overdue reminders. They've trained the team into numbness. This dashboard turns 'you have 150 reminders' into 'you have 12 accounts worth reaching out to today — here are the pre-drafted emails.'",
+    what: [
+      "Pulls accounts with reminders due + accounts cold for 6+ months",
+      "Pre-drafts re-engagement email using last known context",
+      "One-click send, one-click snooze, one-click close"
+    ],
+    done: "Average overdue reminder count per team member drops from 150 to <20 within 4 weeks."
+  },
+  {
+    id: "followup-plugin", col: "followup", tier: "tool",
+    title: "Auto-Draft Follow-Up Plugin",
+    lede: "Detects no response after N days, pre-drafts next touch.",
+    why: "Inboxes are where outreach dies. A Gmail-native plugin that watches for non-responses and auto-drafts the next step (without sending) removes the last remaining manual step.",
+    what: [
+      "Gmail plugin",
+      "Configurable thresholds per tier",
+      "Draft sits in drafts folder, human approves"
+    ],
+    done: "Plugin deployed to team, active across all sourcing inboxes."
+  },
+  {
+    id: "events-in-sequence", col: "followup", tier: "tool",
+    title: "Events-in-Sequence Automation",
+    lede: "Step 4 of every sequence auto-invites prospect to the nearest event by city.",
+    why: "Events are Innovius's best relationship-builder. Embedding an invite into every outreach sequence converts cold outreach into a multi-touch relationship play — without manual work per account.",
+    what: [
+      "Reads from the Annual Event Calendar",
+      "Matches prospect city to nearest event",
+      "Inserts personalized invite as step 4 of their sequence"
+    ],
+    done: "At least 20% of sequences include an event invite. Event RSVPs from outreach measured."
+  },
+  {
+    id: "reengagement-orch", col: "followup", tier: "product",
+    title: "Automated Re-Engagement Orchestrator",
+    lede: "End-to-end: detects cold cohorts → routes to correct sequence → measures outcome.",
+    why: "The Reminder Dashboard surfaces dormant accounts. The Orchestrator runs the full re-engagement lifecycle — cohort detection, sequence selection, execution, outcome tracking. Systemic follow-up at firm scale.",
+    what: [
+      "Defines cold cohorts (no-response after campaign, quiet-after-IC1, 6-month-cold)",
+      "Picks the right re-engagement sequence per cohort",
+      "Runs the sequence; measures response, meetings, pipeline added"
+    ],
+    done: "All dormant accounts actively managed. Re-engagement pipeline becomes a measurable source of meetings."
+  },
+  /* PIPELINE */
+  {
+    id: "reminder-triage", col: "pipeline", tier: "skill",
+    title: "Overdue Reminder Triage Playbook",
+    lede: "Sorts 100–150 overdue reminders per person into priority buckets.",
+    why: "Emergency fix before the Reminder-to-Action Dashboard ships. A one-shot Claude skill that takes an export of someone's overdue reminders and returns a prioritized action list.",
+    what: [
+      "Skill ingests a CSV or Affinity export",
+      "Returns: do-today / do-this-week / snooze-30-days / close buckets",
+      "Includes one-line action recommendation per item"
+    ],
+    done: "Every team member's reminder queue triaged within 2 weeks. Queue drops to <30 per person."
+  },
+  {
+    id: "stage-definition", col: "pipeline", tier: "skill",
+    title: "Campaign-Stage Definition Playbook",
+    lede: "Canonical stage names + exit criteria so Affinity becomes legible.",
+    why: "Affinity field sprawl means 'First Meeting' means something different in every sheet. A firm-wide definition of every stage with explicit exit criteria is the foundation everything else sits on.",
+    what: [
+      "Document: every campaign stage, what it means, what moves a company out",
+      "Applied retroactively to clean up Affinity state",
+      "Becomes the data contract for every downstream dashboard"
+    ],
+    done: "Affinity state is consistent across all views. Campaign Status Tracker can be built on top."
+  },
+  {
+    id: "campaign-tracker", col: "pipeline", tier: "tool",
+    title: "Campaign Status Tracker",
+    lede: "Real-time: which companies are in which stage of which campaign.",
+    why: "Today nobody knows. Emails go out, companies disappear into Affinity's purgatory, and 500+ accounts sit unowned. The tracker is the observability layer for the firm's outbound pipeline.",
+    what: [
+      "Pulls from Athena + Affinity",
+      "Per-campaign view: stage funnel, time-in-stage, owner",
+      "Per-account view: current stage, next action, owner"
+    ],
+    done: "Every active campaign has a live dashboard. 'Where is X company' is a 5-second lookup."
+  },
+  {
+    id: "mission-control", col: "pipeline", tier: "product",
+    title: "Top-Accounts Mission Control",
+    lede: "Top 50/100 × owner × last touch × VC connections × one-click next-step levers.",
+    why: "Koby's flag: 'we don't have a single view of our top accounts.' This replaces the ad-hoc escalation meeting with a live dashboard that shows every top account with every lever available (send LinkedIn, request intro, invite to event) as a single click.",
+    what: [
+      "Top 50/100 list with all signal and engagement data",
+      "Relationship heat map per account (who at Innovius is closest to their investors)",
+      "Action panel per account: LinkedIn, email, event, intro request"
+    ],
+    done: "Escalation meeting becomes a 15-minute review against this dashboard. No more spreadsheet archaeology."
+  },
+  {
+    id: "measurement-layer", col: "pipeline", tier: "product",
+    title: "Outbound Activity Measurement & Accountability Layer",
+    lede: "Who is outbounding, at what volume, with what results. Visible to leadership.",
+    why: "Justin: 'without accountability, none of this works.' Today there's no measurement of who is actually doing the work. This layer makes it visible — not as surveillance, but as the basis for honest 2-week reviews.",
+    what: [
+      "Per-person dashboard: volume sent, response rate, meetings booked, pipeline added",
+      "Trend over time",
+      "Shared with leadership weekly"
+    ],
+    done: "Every Monday standup opens with this dashboard. Honest conversations become possible."
+  },
+  /* INVESTOR */
+  {
+    id: "vc-catchup-skill", col: "investor", tier: "skill",
+    title: "VC Catch-Up Email Drafter",
+    lede: "Claude skill: input VC + context → draft 'haven't talked in a while' email.",
+    why: "Marci and Xiaolei both flagged the overhead of re-engaging investors. A skill that drafts a contextual catch-up email in 30 seconds removes the friction.",
+    what: [
+      "Input: VC name + last-contact notes + any recent signal (new fund, new role, recent deal)",
+      "Output: warm, non-pitchy catch-up email in Innovius voice",
+      "Reusable across all team members"
+    ],
+    done: "Skill ships. Team uses it for 20+ VC catch-ups in first month."
+  },
+  {
+    id: "giveaway-list", col: "investor", tier: "tool",
+    title: "VC Giveaway List",
+    lede: "Company-to-fund matcher. Marci's existing build — productize it.",
+    why: "Marci has a working prototype that screen-scrapes Affinity, joins with Harmonic/PitchBook, and tags each portfolio-adjacent company with the VC fund most likely to want it. It works. Work is hardening it so anyone on the team can use it.",
+    what: [
+      "Take Marci's prototype from notebook to shared tool",
+      "Add fund-tagging ruleset per VC",
+      "UI: drop-in filter by fund, export list"
+    ],
+    done: "Tool lives somewhere shared. Deal-sharing meetings reference it instead of manual spreadsheets."
+  },
+  {
+    id: "vc-crm", col: "investor", tier: "tool",
+    title: "VC Relationship CRM",
+    lede: "Team-wide relationship map + heat map + hot/cold tracker + auto catch-up drafts.",
+    why: "Four features that are all the same underlying system: where are our relationships, how warm is each, which are going cold, what do we say next. Consolidated, this becomes the firm's relationship engine.",
+    what: [
+      "Aggregates all team members' VC contacts",
+      "Shows heat (last touch, frequency, response rate)",
+      "Flags relationships cold for 4+ weeks with pre-drafted check-in",
+      "Filter by target company → shows warmest path in"
+    ],
+    done: "Replaces Connect-the-Dots for most use cases. Weekly relationship health report auto-generated."
+  },
+  {
+    id: "vc-pipeline-system", col: "investor", tier: "product",
+    title: "VC Pipeline System",
+    lede: "Score VCs, track them, outbound them — with the same rigor as the company pipeline.",
+    why: "Investor relationships are the firm's highest-converting source. Treating them with less rigor than company sourcing is backwards. This system applies the same playbook to VCs: score, prioritize, outreach, track, measure.",
+    what: [
+      "VC scoring model (mandate fit, stage, warmth, reciprocity)",
+      "VC outreach sequencing",
+      "Pipeline view: which VCs are active, dormant, at risk"
+    ],
+    done: "VC pipeline is measurable and managed. Warm-intro deal-flow becomes a tracked input, not a lucky output."
+  },
+  {
+    id: "deal-sharing-rebuild", col: "investor", tier: "product",
+    title: "Deal-Sharing Tool Rebuild",
+    lede: "Curated, per-VC filtered view of deals relevant to their mandate.",
+    why: "Stu's flag: the current deal-sharing tool isn't usable. That means portfolio support via deal flow is a weak channel. Rebuilt correctly, it becomes a reason VCs take our calls.",
+    what: [
+      "Per-VC view filtered by their mandate",
+      "Pull from the VC Giveaway List + CRM",
+      "One-click share, tracked in the VC Pipeline"
+    ],
+    done: "Stu uses it weekly without friction. Every team member's VC relationship gets 2–3 curated share touches per month."
+  },
+  /* INFRA */
+  {
+    id: "brand-skill", col: "infra", tier: "skill",
+    title: "Innovius Brand Skill (Enhancement)",
+    lede: "Claude skill that auto-applies Innovius brand to every output.",
+    why: "The skill already exists. This item is about enhancement: adding missing components (new templates, new formats), documenting usage, and making sure every other tool in this matrix consumes it.",
+    what: [
+      "Audit current brand skill coverage",
+      "Add missing templates (memo, one-pager, slide)",
+      "Wire into every new tool/product as a dependency"
+    ],
+    done: "Every output from the matrix automatically renders in brand. No manual styling."
+  },
+  {
+    id: "skills-library", col: "infra", tier: "tool",
+    title: "Innovius Skills Library",
+    lede: "Shared repo for every Claude skill the team builds. Brand baked in.",
+    why: "Today skills live on individual laptops. A shared, versioned, discoverable library is the infrastructure that turns 'one-person productivity gains' into 'firm-wide capability.' The platform layer under everything.",
+    what: [
+      "Central repo (Notion-linked or similar)",
+      "Per-skill: purpose, usage, owner, version",
+      "Branding framework as a dependency across all skills"
+    ],
+    done: "Every skill built by anyone on the team is discoverable here. Audit: 100% coverage."
+  },
+  {
+    id: "affinity-rebuild", col: "infra", tier: "product",
+    title: "Affinity Data Layer Rebuild",
+    lede: "Field consolidation + Athena↔Affinity pipeline fix. All 12K companies accessible.",
+    why: "The single biggest structural blocker in the whole matrix. Affinity has field sprawl that makes columns inconsistent across sheets. Athena scores 12K companies but only 3,900 surface in Affinity's front-end. Fix this and every other tool gets 3x more useful.",
+    what: [
+      "Consolidate redundant fields across all Affinity sheets",
+      "Publish canonical field schema",
+      "Extend Athena→Affinity pipe to cover all 12K scored companies"
+    ],
+    done: "Affinity data quality is trustworthy. 12K+ companies browsable. No more 'is the data good?' as a blocker.",
+    note: "Akash + Ali identified this as something they'd personally take on. Flag if claimed here vs. handled separately."
+  },
+  {
+    id: "affinity-claude", col: "infra", tier: "product",
+    title: "Affinity ↔ Claude Native Integration",
+    lede: "Native integration arriving within ~3 weeks. Owner drives rollout and training.",
+    why: "This integration unlocks massive leverage — Claude becomes a first-class Affinity interface. Owner's job is to drive adoption, not build the integration itself.",
+    what: [
+      "Early access + testing",
+      "Team training + playbook",
+      "Integration with other matrix tools (Discovery Aggregator, Mission Control)"
+    ],
+    done: "Full team rollout completed within 4 weeks of integration launch."
+  },
+  {
+    id: "sdr-migration", col: "infra", tier: "product",
+    title: "Commercial SDR Platform Migration",
+    lede: "Evaluate → pilot → replace homegrown sequencing with Unify or equivalent.",
+    why: "Multiple people flagged: our homegrown outbound tool isn't best-in-class. Commercial platforms have solved what we're rebuilding. The differentiation is in our sourcing, not our sending infrastructure.",
+    what: [
+      "RFP-style eval of Unify + 2 alternatives",
+      "Pilot on one vertical",
+      "Full migration if pilot wins"
+    ],
+    done: "Decision made with data. If Unify wins, migration complete within 90 days."
+  },
+];
+
+const RUN_PROGRAMS = [
+  {
+    id: "run-pe-vsaas",
+    title: "PE VSaaS Takeout Campaign",
+    lede: "Target PE-backed vertical SaaS companies that fit Innovius ICP.",
+    cohort: "PE-backed vertical SaaS companies in Innovius ICP",
+    hypothesis: "PE-backed VSaaS is systematically overlooked by consensus VC and squarely in our sweet spot. Structurally mature businesses often stalled at single-digit growth that Innovius's GTM embed can unlock.",
+    volume: "~50 companies per quarterly batch, sourced via PE portco scraper",
+    cadence: "Quarterly outreach batches",
+  },
+  {
+    id: "run-reintroduce",
+    title: "Re-Introducing Innovius Amongst Investors",
+    lede: "Rebuild and refresh the investor relationship network.",
+    cohort: "Peer VCs who moved firms in the last 12 months + existing contacts that have gone quiet",
+    hypothesis: "Warm intros are our highest-converting channel. ~40% of peer-level contacts have left venture — a deliberate rebuild restores a degrading source of pipeline.",
+    volume: "30–50 VCs to re-engage",
+    cadence: "Ongoing; 3-month nurture cycle per relationship",
+  },
+  {
+    id: "run-too-early",
+    title: "\"Too Early\" Companies Catch-Up",
+    lede: "Re-engage companies we passed on because they were too early.",
+    cohort: "Companies Innovius passed on or deprioritized 6–18 months ago because they were too early",
+    hypothesis: "Many of these have matured 2–4x since last contact. A share of them now fit ICP and have warm recognition of Innovius from the prior touch.",
+    volume: "~100–200 companies from Affinity history",
+    cadence: "One-time sweep + recurring every 2 quarters",
+  },
+  {
+    id: "run-post-funding",
+    title: "Automatic Outreach 3 Months Post-Funding",
+    lede: "Fire a suppressed outreach 3 months after any ICP company closes a round.",
+    cohort: "Any ICP company that closes a funding round",
+    hypothesis: "3 months post-raise, founders have deployed initial capital and are beginning to think about the next phase. Timing signal > template quality.",
+    volume: "Continuous — ~20–30 triggered sends per month",
+    cadence: "Always-on automated trigger",
+  },
+  {
+    id: "run-top-accounts",
+    title: "Top 50 / Top 100 Account Management",
+    lede: "Tiered list of highest-conviction targets with defined next steps.",
+    cohort: "Highest-conviction target companies across the firm's thesis surface",
+    hypothesis: "Concentrated effort on best-fit accounts with explicit owners and next-action levers beats diffuse outreach across the full pool.",
+    volume: "Top 50 (tier 1) + Top 100 (tier 2)",
+    cadence: "Weekly review · monthly structured touch per account",
+  },
+  {
+    id: "run-unresponsive",
+    title: "Unresponsive Email Campaign Re-Engagement",
+    lede: "Re-engage companies that completed a full sequence with zero response.",
+    cohort: "Companies that completed a full outreach sequence with zero response",
+    hypothesis: "The original approach failed — but different angles, timing, or context (e.g., portfolio news, event invite) convert a meaningful share on second contact.",
+    volume: "~500–600 companies currently in post-campaign purgatory",
+    cadence: "Monthly cohort re-engagement blasts",
+  },
+  {
+    id: "run-first-meeting",
+    title: "\"Stuck in First Meeting\" Pipeline Cleanup",
+    lede: "Advance, close, or re-sequence every company tagged First Meeting.",
+    cohort: "All Affinity companies tagged First Meeting with no follow-up action logged",
+    hypothesis: "Real deal flow is buried in this cohort. Systematic triage surfaces active opportunities that have been lost to process debt.",
+    volume: "Unknown — first pass requires Affinity audit",
+    cadence: "One-time sweep + weekly hygiene",
+  },
+  {
+    id: "run-gtm-turnover",
+    title: "GTM Org Turnover Signal Program",
+    lede: "Identify companies with GTM org turnover; outreach with value-add hook.",
+    cohort: "Companies with significant GTM turnover (sales rep churn, head of sales departure, CRO replacement)",
+    hypothesis: "GTM turnover = pain = timing. Innovius's value-add is most immediately relevant here, and a warm hook exists for the intro conversation.",
+    volume: "Signal-driven; expect 10–20 triggers per month",
+    cadence: "Always-on trigger via job-posting / LinkedIn / layoff monitoring",
+  },
+  {
+    id: "run-lookalike",
+    title: "Lookalike Campaign",
+    lede: "10 lookalikes per IC1 deal, lost deal, and deal-we-wish-we-saw.",
+    cohort: "Structural lookalikes of IC1 deals, lost deals, and deals we were excited about but never saw",
+    hypothesis: "Pattern-match off our best signals — successes, misses, and losses — compounds top of funnel with every deal we touch.",
+    volume: "10 per anchor company; ~200–300 per year",
+    cadence: "Triggered by anchor events (IC1 advance, deal loss, retro)",
+  },
+  {
+    id: "run-signal-based",
+    title: "Signal-Based Always-On Outreach",
+    lede: "Outreach fires when any defined signal triggers for an ICP company.",
+    cohort: "Any ICP company firing one of 3–4 defined signals (funding, GTM hire, intl expansion, integration launch)",
+    hypothesis: "Signal = real activity at the company = highest-receptivity window. Arriving when something real is happening beats calendar-based outreach.",
+    volume: "Continuous; volume scales with signal set",
+    cadence: "Always-on",
+  },
+  {
+    id: "run-giveaway",
+    title: "VC Giveaway / Deal-Sharing System",
+    lede: "Per-VC curated sharing as a relationship-building and deal-flow channel.",
+    cohort: "VC contacts mapped to fund profile and stage focus",
+    hypothesis: "Curated, per-VC sharing strengthens relationships and generates reciprocal deal flow. Current deal-sharing is a weak signal because it isn't tailored.",
+    volume: "20–40 active VC relationships, ongoing curation",
+    cadence: "Monthly share per VC",
+  },
+  {
+    id: "run-thematic",
+    title: "Thematic Vertical Sourcing Program",
+    lede: "Per-person verticals run as mini-GM programs.",
+    cohort: "3–4 end markets per team member (e.g., manufacturing, construction tech, gov tech)",
+    hypothesis: "Depth beats breadth. A per-vertical mini-GM model with clear weekly output outperforms generic horizontal outbound.",
+    volume: "~10 qualified companies per vertical per week",
+    cadence: "Weekly Monday delivery cadence",
+  },
+  {
+    id: "run-nurture",
+    title: "Innovius Nurture / Content Campaign",
+    lede: "Send value-add content to the full CEO database on a recurring cadence.",
+    cohort: "Every CEO in the Innovius database",
+    hypothesis: "Content without a hard ask builds brand and keeps Innovius warm for when founder timing shifts. Compounds trust across the full audience.",
+    volume: "500+ CEOs in full database",
+    cadence: "Monthly or bi-monthly send",
+  },
+  {
+    id: "run-events-seq",
+    title: "Events Playbook as a Sequence Step",
+    lede: "Embed event invitations as step 4 of every outreach sequence.",
+    cohort: "High-tier prospects in any active sequence",
+    hypothesis: "Events are Innovius's best relationship-builder. Embedding as a deterministic sequence step converts cold outreach into a multi-touch relationship play.",
+    volume: "~20% of all active sequences",
+    cadence: "Always-on, embedded in outreach infrastructure",
+    note: "Requires the Annual Event Calendar (BUILD · Follow-Up · Skill) as a prerequisite. Not finalized in the workshop — claim here to move it forward."
+  },
+  {
+    id: "run-remove-top",
+    title: "\"Remove the Top Filter\" Experiment",
+    lede: "Test reaching out to consensus-VC-backed companies to validate thesis.",
+    cohort: "~10 consensus-VC-backed companies (90th-percentile Athena, hot-funded, 150–250% growth)",
+    hypothesis: "Justin's observation: even hot-backed companies often can't raise follow-ons in the current market. If true, these are now in our addressable universe and we've been self-limiting.",
+    volume: "10 test companies",
+    cadence: "One-time experiment, 4-week horizon, structured retro",
+    note: "Not finalized in the workshop — this claim is a commitment to design and run the experiment and report results."
+  },
+];
+
+/* ═════════════════════════════════════════════════════════════════
+   STATE — Google Sheets sync with localStorage fallback
+   ═════════════════════════════════════════════════════════════════ */
+
+const LS_KEY = "innovius-sourcing-matrix-v2";
+
+let state = {
+  build: {},
+  run: {},
+  contrib: {}
+};
+
+function useLocalStorage() {
+  return !SHEETS_WEB_APP_URL || SHEETS_WEB_APP_URL.trim() === "";
+}
+
+function setSyncStatus(status) {
+  const dot = document.getElementById("sync-dot");
+  const text = document.getElementById("sync-status");
+  dot.classList.remove("syncing", "error", "local");
+  if (status === "syncing") {
+    dot.classList.add("syncing");
+    text.textContent = "Syncing…";
+  } else if (status === "error") {
+    dot.classList.add("error");
+    text.textContent = "Sync error · local only";
+  } else if (status === "local") {
+    dot.classList.add("local");
+    text.textContent = "Local mode";
+  } else {
+    text.textContent = "Synced";
+  }
+}
+
+async function loadState() {
+  if (useLocalStorage()) {
+    setSyncStatus("local");
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) state = { ...state, ...JSON.parse(raw) };
+    } catch (e) {}
+    return;
+  }
+  setSyncStatus("syncing");
+  try {
+    const res = await fetch(SHEETS_WEB_APP_URL, { method: "GET" });
+    const data = await res.json();
+    if (data && !data.error) {
+      state = {
+        build:   data.build   || {},
+        run:     data.run     || {},
+        contrib: data.contrib || {}
+      };
+      setSyncStatus("ok");
+    } else {
+      throw new Error(data.error || "Unknown error");
+    }
+  } catch (err) {
+    console.error("Load failed:", err);
+    setSyncStatus("error");
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) state = { ...state, ...JSON.parse(raw) };
+    } catch (e) {}
+  }
+}
+
+function persistLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+async function remoteWrite(payload) {
+  if (useLocalStorage()) return { ok: true };
+  setSyncStatus("syncing");
+  try {
+    const res = await fetch(SHEETS_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data && !data.error) {
+      if (data.claims) {
+        state = {
+          build:   data.claims.build   || {},
+          run:     data.claims.run     || {},
+          contrib: data.claims.contrib || {}
+        };
+      }
+      setSyncStatus("ok");
+      return { ok: true };
+    }
+    throw new Error(data.error || "Unknown error");
+  } catch (err) {
+    console.error("Write failed:", err);
+    setSyncStatus("error");
+    return { ok: false, error: err };
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   RENDER
+   ═════════════════════════════════════════════════════════════════ */
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+
+function renderBuild() {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  const corner = document.createElement("div");
+  corner.className = "col-head";
+  corner.style.background = "transparent";
+  corner.style.borderBottom = "none";
+  grid.appendChild(corner);
+
+  COLS.forEach(c => {
+    const h = document.createElement("div");
+    h.className = "col-head";
+    h.innerHTML = `<span class="col-head-num">${c.short}</span><br>${c.title}`;
+    grid.appendChild(h);
+  });
+
+  TIERS.forEach(t => {
+    const rh = document.createElement("div");
+    rh.className = "row-head";
+    rh.innerHTML = `
+      <span class="row-head-tier">${t.label}</span>
+      <span style="font-size: 14px; font-weight: 600; opacity: 0.95; line-height:1.3;">${t.desc}</span>
+      <span class="row-head-window">${t.window}</span>
+    `;
+    grid.appendChild(rh);
+
+    COLS.forEach(c => {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      const cards = BUILD_CARDS.filter(card => card.col === c.key && card.tier === t.key);
+      if (cards.length === 0) cell.classList.add("cell-empty");
+      else cards.forEach(card => cell.appendChild(renderCard(card, "build")));
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function renderRun() {
+  const grid = document.getElementById("run-grid");
+  grid.innerHTML = "";
+  RUN_PROGRAMS.forEach(p => grid.appendChild(renderCard(p, "run")));
+}
+
+function renderCard(card, type) {
+  const el = document.createElement("div");
+  const claimed = (type === "build" ? state.build : state.run)[card.id];
+  el.className = "card" + (claimed ? " card-claimed" : "");
+  el.setAttribute("data-tier", type === "run" ? "program" : card.tier);
+  el.setAttribute("data-id", card.id);
+  el.setAttribute("data-type", type);
+
+  const badge = card.isFamily ? `<div class="family-badge">Skill Family</div>` : "";
+  const statusText = claimed
+    ? `<div class="card-status claimed">Claimed</div><div class="claimed-by">${escapeHtml(claimed)}</div>`
+    : `<div class="card-status open">Open for claim</div>`;
+
+  const descLine = type === "run" && card.lede
+    ? `<div class="card-desc">${escapeHtml(card.lede)}</div>`
+    : "";
+
+  el.innerHTML = `
+    ${badge}
+    <div class="card-title">${card.title}</div>
+    ${descLine}
+    <div class="card-meta">
+      <div>${statusText}</div>
+      <div class="card-arrow">→</div>
+    </div>
+  `;
+
+  el.addEventListener("click", () => openModal(card.id, type));
+  return el;
+}
+
+function updateCounters() {
+  const buildTotal = BUILD_CARDS.length;
+  const runTotal = RUN_PROGRAMS.length;
+  const buildClaimed = Object.keys(state.build).length;
+  const runClaimed = Object.keys(state.run).length;
+
+  document.getElementById("build-counter").innerHTML = `<strong>${buildClaimed}</strong> / <strong>${buildTotal}</strong>`;
+  document.getElementById("run-counter").innerHTML   = `<strong>${runClaimed}</strong> / <strong>${runTotal}</strong>`;
+  document.getElementById("build-count").textContent = `${buildClaimed} / ${buildTotal}`;
+  document.getElementById("run-count").textContent   = `${runClaimed} / ${runTotal}`;
+}
+
+function renderAll() {
+  renderBuild();
+  renderRun();
+  updateCounters();
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   MODAL
+   ═════════════════════════════════════════════════════════════════ */
+
+let current = { id: null, type: null };
+
+function openModal(cardId, type) {
+  const cardList = type === "build" ? BUILD_CARDS : RUN_PROGRAMS;
+  const card = cardList.find(c => c.id === cardId);
+  if (!card) return;
+  current = { id: cardId, type };
+
+  const tierKey = type === "run" ? "program" : card.tier;
+  const tier = type === "run"
+    ? { label: "Program", window: "Campaign" }
+    : TIERS.find(t => t.key === card.tier);
+  const col = type === "build" ? COLS.find(c => c.key === card.col) : null;
+
+  const mTier = document.getElementById("m-tier");
+  mTier.textContent = type === "run"
+    ? "Program · Owner defines success metric"
+    : `${tier.label} · ${tier.window}`;
+  mTier.className = "modal-tier" + (type === "run" ? " program" : "");
+
+  document.getElementById("m-title").textContent = card.title;
+  document.getElementById("m-col").textContent = type === "build" ? col.title : "Section 02 · RUN";
+
+  const body = document.getElementById("m-body");
+  let html = "";
+
+  if (type === "build") {
+    if (card.lede) html += `<p style="font-size:15px; color:var(--mute); line-height:1.6; margin-bottom:10px;">${escapeHtml(card.lede)}</p>`;
+    if (card.why) html += `<h4>Why it matters</h4><p>${escapeHtml(card.why)}</p>`;
+    if (card.what && card.what.length) {
+      html += `<h4>What it is</h4><ul>`;
+      card.what.forEach(w => html += `<li>${escapeHtml(w)}</li>`);
+      html += `</ul>`;
+    }
+    if (card.done) html += `<h4>Definition of done</h4><p>${escapeHtml(card.done)}</p>`;
+    if (card.note) html += `<div class="note-box">${escapeHtml(card.note)}</div>`;
+
+    if (card.isFamily && card.subItems) {
+      html += `<div class="contrib-section">
+        <h4>Contributor Slots (Stretch Work)</h4>
+        <p class="contrib-lede">Each sub-scanner below is an <em>additional</em> claim that does NOT consume your main matrix slot. The Family Lead owns the shepherding work; contributors build individual scanners as stretch.</p>
+        <div class="contrib-list">`;
+      card.subItems.forEach(sub => {
+        const claimedBy = state.contrib[sub.id];
+        if (claimedBy) {
+          html += `<div class="contrib-row contrib-claimed">
+            <span class="contrib-name">${escapeHtml(sub.name)}</span>
+            <span class="contrib-by">${escapeHtml(claimedBy)}</span>
+            <button class="contrib-btn contrib-release" data-contrib="${sub.id}" data-action="release">Release</button>
+          </div>`;
+        } else {
+          html += `<div class="contrib-row">
+            <span class="contrib-name">${escapeHtml(sub.name)}</span>
+            <button class="contrib-btn" data-contrib="${sub.id}" data-action="claim">Claim</button>
+          </div>`;
+        }
+      });
+      html += `</div></div>`;
+    }
+  } else {
+    // RUN modal
+    if (card.lede) html += `<p style="font-size:15px; color:var(--mute); line-height:1.6; margin-bottom:16px;">${escapeHtml(card.lede)}</p>`;
+    html += `<div style="margin-top: 6px;">`;
+    html += `<div class="kv-row"><div class="kv-key">Target cohort</div><div class="kv-val">${escapeHtml(card.cohort)}</div></div>`;
+    html += `<div class="kv-row"><div class="kv-key">Hypothesis</div><div class="kv-val">${escapeHtml(card.hypothesis)}</div></div>`;
+    html += `<div class="kv-row"><div class="kv-key">Volume target</div><div class="kv-val">${escapeHtml(card.volume)}</div></div>`;
+    html += `<div class="kv-row"><div class="kv-key">Cadence</div><div class="kv-val">${escapeHtml(card.cadence)}</div></div>`;
+    html += `<div class="kv-row"><div class="kv-key">Success metric</div><div class="kv-val blank">To be defined by owner at claim — bring it to the 2-week readout.</div></div>`;
+    html += `</div>`;
+    if (card.note) html += `<div class="note-box">${escapeHtml(card.note)}</div>`;
+  }
+
+  body.innerHTML = html;
+
+  // Footer
+  const foot = document.getElementById("m-foot");
+  const claims = type === "build" ? state.build : state.run;
+  const claimedBy = claims[cardId];
+  if (claimedBy) {
+    foot.innerHTML = `
+      <div class="signup-label">Claimed</div>
+      <div class="claimed-state">
+        <div class="claimed-info"><strong>${escapeHtml(claimedBy)}</strong> is owning this</div>
+        <button class="release-btn" id="release-btn">Release</button>
+      </div>
+    `;
+    document.getElementById("release-btn").addEventListener("click", () => releaseCard(cardId, type));
+  } else {
+    const label = card.isFamily
+      ? "Claim Family Lead (main matrix slot)"
+      : type === "run" ? "Sign up to run this program" : "Sign up to own this";
+    foot.innerHTML = `
+      <div class="signup-label">${label}</div>
+      <div class="signup-row">
+        <input type="text" class="signup-input" id="signup-input" placeholder="Your name..." />
+        <button class="signup-btn" id="signup-btn">Claim</button>
+      </div>
+    `;
+    const input = document.getElementById("signup-input");
+    const btn = document.getElementById("signup-btn");
+    btn.addEventListener("click", () => claimCard(cardId, type, input.value.trim()));
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") claimCard(cardId, type, input.value.trim());
+    });
+    setTimeout(() => input.focus(), 120);
+  }
+
+  body.querySelectorAll("[data-contrib]").forEach(b => {
+    b.addEventListener("click", () => {
+      const id = b.getAttribute("data-contrib");
+      const action = b.getAttribute("data-action");
+      if (action === "claim") claimContrib(id);
+      else releaseContrib(id);
+    });
+  });
+
+  document.getElementById("modal").classList.add("open");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("open");
+  current = { id: null, type: null };
+}
+
+document.getElementById("modal-close").addEventListener("click", closeModal);
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target.id === "modal") closeModal();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+});
+
+/* ═════════════════════════════════════════════════════════════════
+   CLAIM / RELEASE
+   ═════════════════════════════════════════════════════════════════ */
+
+async function claimCard(cardId, type, name) {
+  if (!name) { toast("Enter your name", "error"); return; }
+  if (type === "build") state.build[cardId] = name;
+  else state.run[cardId] = name;
+  persistLocal();
+  renderAll();
+  openModal(cardId, type);
+  const result = await remoteWrite({ action: "claim", type, card_id: cardId, claimed_by: name });
+  if (result.ok) {
+    renderAll();
+    openModal(cardId, type);
+    toast(`Claimed by ${name}`);
+  } else {
+    toast("Saved locally — sync failed", "error");
+  }
+}
+
+async function releaseCard(cardId, type) {
+  if (type === "build") delete state.build[cardId];
+  else delete state.run[cardId];
+  persistLocal();
+  renderAll();
+  openModal(cardId, type);
+  const result = await remoteWrite({ action: "release", type, card_id: cardId });
+  if (result.ok) {
+    renderAll();
+    openModal(cardId, type);
+    toast("Released");
+  } else {
+    toast("Released locally — sync failed", "error");
+  }
+}
+
+async function claimContrib(subId) {
+  const name = prompt("Your name (contributor slot):");
+  if (!name || !name.trim()) return;
+  state.contrib[subId] = name.trim();
+  persistLocal();
+  openModal(current.id, current.type);
+  const result = await remoteWrite({ action: "claim", type: "contrib", card_id: subId, claimed_by: name.trim() });
+  if (result.ok) openModal(current.id, current.type);
+  toast(result.ok ? `Contributor: ${name.trim()}` : "Sync failed", result.ok ? "" : "error");
+}
+
+async function releaseContrib(subId) {
+  delete state.contrib[subId];
+  persistLocal();
+  openModal(current.id, current.type);
+  const result = await remoteWrite({ action: "release", type: "contrib", card_id: subId });
+  if (result.ok) openModal(current.id, current.type);
+  toast(result.ok ? "Slot released" : "Sync failed", result.ok ? "" : "error");
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   TOAST + INIT
+   ═════════════════════════════════════════════════════════════════ */
+
+let toastTimer;
+function toast(msg, kind) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.remove("error");
+  if (kind === "error") t.classList.add("error");
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+(async function init() {
+  await loadState();
+  renderAll();
+
+  // Auto-refresh every 30 seconds to keep team in sync
+  if (!useLocalStorage()) {
+    setInterval(async () => {
+      await loadState();
+      renderAll();
+    }, 30000);
+  }
+})();
+</script>
+
+</body>
+</html>
